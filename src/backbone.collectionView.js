@@ -23,6 +23,34 @@
 		"box-shadow" : "none"
 	};
 
+	var mConstructor = function( options ) {
+		Backbone.ViewOptions.add( this, "initializationOptions" ); // setup the ViewOptions functionality.
+		this.setOptions( options ); // and make use of any provided options
+
+		if( ! this.collection ) this.collection = new Backbone.Collection();
+
+		this._hasBeenRendered = false;
+
+		if( this._isBackboneCourierAvailable() ) {
+			Backbone.Courier.add( this );
+		}
+
+		this.$el.data( "view", this ); // needed for connected sortable lists
+		this.$el.addClass( "collection-list" );
+		if( this.selectable ) this.$el.addClass( "selectable" );
+
+		if( this.processKeyEvents )
+			this.$el.attr( "tabindex", 0 ); // so we get keyboard events
+
+		this.selectedItems = [];
+
+		this._updateItemTemplate();
+
+		if( this.collection )
+			this._registerCollectionEvents();
+
+		this.viewManager = new ChildViewContainer();
+	};
 	Backbone.CollectionView = Backbone.View.extend( {
 
 		tagName : "ul",
@@ -65,34 +93,9 @@
 			{ "emptyListCaption" : null }
 		],
 
-		initialize : function( options ) {
-			Backbone.ViewOptions.add( this, "initializationOptions" ); // setup the ViewOptions functionality.
-			this.setOptions( options ); // and make use of any provided options
-			
-			if( ! this.collection ) this.collection = new Backbone.Collection();
-			
-			this._hasBeenRendered = false;
-
-			if( this._isBackboneCourierAvailable() ) {
-				Backbone.Courier.add( this );
-			}
-
-			this.$el.data( "view", this ); // needed for connected sortable lists
-			this.$el.addClass( "collection-list" );
-			if( this.selectable ) this.$el.addClass( "selectable" );
-
-			if( this.processKeyEvents )
-				this.$el.attr( "tabindex", 0 ); // so we get keyboard events
-
-			this.selectedItems = [];
-
-			this._updateItemTemplate();
-
-			if( this.collection )
-				this._registerCollectionEvents();
-
-			this.viewManager = new ChildViewContainer();
-		},
+		// Initialize is an empty function by default. Override it with your own
+    		// initialization logic.
+    		initialize: function(){},
 
 		onOptionsChanged : function( changedOptions, originalOptions ) {
 			var rerender = false;
@@ -960,6 +963,9 @@
 			mDefaultModelViewConstructor = theConstructor;
 		}
 	});
+
+	Backbone.CollectionView.prototype.constructor = mConstructor;
+
 
 	// Backbone.ViewOptions
 	// --------------------
