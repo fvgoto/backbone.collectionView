@@ -27,6 +27,9 @@
 		Backbone.ViewOptions.add( this, "initializationOptions" ); // setup the ViewOptions functionality.
 		this.setOptions( options ); // and make use of any provided options
 
+		// options are set up, so it's time to call parent constructor
+		// note: this also calls potential user provided initialize
+		Backbone.View.prototype.constructor.apply(this, arguments);
 		if( ! this.collection ) this.collection = new Backbone.Collection();
 
 		this._hasBeenRendered = false;
