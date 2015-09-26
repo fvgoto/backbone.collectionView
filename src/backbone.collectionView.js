@@ -364,6 +364,9 @@
 
 			if( _.isFunction( this.onAfterRender ) )
 				this.onAfterRender();
+
+			// convention is for **render** to always return `this`. (at least in Backbone)
+			return this;
 		},
 
 		_showEmptyListCaptionIfAppropriate : function ( ) {
@@ -458,7 +461,7 @@
 				view.remove();
 			} );
 
-			Backbone.View.prototype.remove.apply( this, arguments );
+			return Backbone.View.prototype.remove.apply( this, arguments );
 		},
 
 		// A method to remove the view relating to model.
