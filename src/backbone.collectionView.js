@@ -65,7 +65,7 @@
 			{ "emptyListCaption" : null }
 		],
 
-		initialize : function( options ) {
+		constructor : function( options ) {
 			Backbone.ViewOptions.add( this, "initializationOptions" ); // setup the ViewOptions functionality.
 			this.setOptions( options ); // and make use of any provided options
 			
@@ -93,6 +93,10 @@
 
 			this.viewManager = new ChildViewContainer();
 		},
+
+		// Initialize is an empty function by default. Override it with your own
+    		// initialization logic.
+    		initialize: function(){},
 
 		onOptionsChanged : function( changedOptions, originalOptions ) {
 			var rerender = false;
